@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telpoc-demo-deployment
+  namespace: telpoc
+  labels:
+    k8s-app: telpoc
+    k8s-project: telpoc
+    
+spec:
+  replicas: 1 # Replica Count default value:1 set by program, put exact replica count in place of parameter if needed
+  selector:
+    matchLabels:
+      k8s-app: telpoc
+      k8s-project: telpoc
+      
+  template:
+    metadata:
+      labels:
+        k8s-app: telpoc
+        k8s-project: telpoc
+        
+      
+    spec:
+      
+      containers:
+      - name: telpoc-demo-container
+        image: babaidevops/ci_demo_test:10
+        imagePullPolicy: Always 
+        
+       
+        ports:
+        - containerPort: 8084 # Developer update: Update port number if container is listening on port other than 80
+          name: http
+          protocol: TCP
+---
