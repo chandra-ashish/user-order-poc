@@ -7,5 +7,5 @@ RUN mvn -f /home/app/pom.xml clean package
 # Create an Image
 FROM openjdk:8-jdk-alpine
 EXPOSE 8084
-COPY --from=stage1 /home/app/target/user-order-poc-1.0.jar user-order-poc-1.0.jar
-ENTRYPOINT ["sh", "-c", "java -jar /user-order-poc-1.0.jar"]
+COPY --from=stage1 /home/app/target/user-order-poc-1.0.jar /user-order-poc-1.0.jar
+CMD ["java", "-jar", "/user-order-poc-1.0.jar"]
