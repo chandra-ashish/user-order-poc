@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: telpoc-svc
+  namespace: telpoc
+spec:
+  selector:
+    k8s-app: telpoc
+    k8s-project: telpoc
+  ports:
+  - name: http
+    port: 8084
+    protocol: TCP
+    targetPort: 8084
+  type: NodePort
