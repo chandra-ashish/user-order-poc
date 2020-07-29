@@ -1,18 +1,19 @@
-package com.telecom.user.dto;
+package com.telecom.user.model;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.telecom.user.dto.OrderError;
 import com.telecom.user.dto.OrderStatus;
 
+import org.springframework.data.cassandra.core.mapping.Column;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -23,64 +24,45 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Information related to an order")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-27T08:22:02.967Z")
-@JsonInclude(Include.NON_NULL)
+
+@Table("order_detail")
 public class Order   {
+	 @PrimaryKey
+	 @Column("id")
   @JsonProperty("id")
   private String id = null;
 
+  @Column("offer_id")
   @JsonProperty("offer_id")
   private String offerId = null;
-
+  
+  @Column("user_id")
+  @JsonProperty("user_id")
+  private String userId = null;
+  
+  @Column("product_id")
   @JsonProperty("product_id")
   private String productId = null;
 
+  @Column("identifier")
   @JsonProperty("identifier")
   private String identifier = null;
-
+ 
+  @Column("creation_date")
   @JsonProperty("creation_date")
-  private Date creationDate = null;
-
-  /**
-   * type of the order
-   */
-  public enum TypeEnum {
-    PURCHASE("purchase"),
-    
-    UNSUBSCRIPTION("unsubscription"),
-    
-    UPDATE("update");
-
-    private String value;
-
-    TypeEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static TypeEnum fromValue(String text) {
-      for (TypeEnum b : TypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-
+  private String creationDate = null;
+  
+  @Column("order_type")
   @JsonProperty("type")
-  private TypeEnum type = null;
+  private String type = null;
 
+  @Column("status")
   @JsonProperty("status")
-  private OrderStatus status = null;
-
+  private String status = null;
+  
+  @Column("error")
   @JsonProperty("error")
-  private OrderError error = null;
+  private Map<String ,String> error = null;
 
   public Order id(String id) {
     this.id = id;
@@ -122,13 +104,35 @@ public class Order   {
   public void setOfferId(String offerId) {
     this.offerId = offerId;
   }
+  
+  public Order userId(String userId) {
+	    this.userId = userId;
+	    return this;
+	  }
+
+	  /**
+	   * Id of the purchased offer
+	   * @return userId
+	  **/
+	  @ApiModelProperty(value = "Id of the purchased offer")
+   
+	  public String getUserId() {
+			return userId;
+		}
+
+		public void setUserId(String userId) {
+			this.userId = userId;
+		}
+
+	 
 
   public Order productId(String productId) {
     this.productId = productId;
     return this;
   }
 
-  /**
+  
+/**
    * Id of the subscribed product this order relates to
    * @return productId
   **/
@@ -163,7 +167,7 @@ public class Order   {
     this.identifier = identifier;
   }
 
-  public Order creationDate(Date creationDate) {
+  public Order creationDate(String creationDate) {
     this.creationDate = creationDate;
     return this;
   }
@@ -177,41 +181,40 @@ public class Order   {
 
   @Valid
 
-  public Date getCreationDate() {
+  public String getCreationDate() {
     return creationDate;
   }
 
-  public void setCreationDate(Date creationDate) {
+  public void setCreationDate(String creationDate) {
     this.creationDate = creationDate;
   }
 
-  public Order type(TypeEnum type) {
+  public Order type(String type) {
     this.type = type;
     return this;
   }
-
+  
   /**
    * type of the order
    * @return type
   **/
   @ApiModelProperty(required = true, value = "type of the order")
   @NotNull
-
-
-  public TypeEnum getType() {
-    return type;
-  }
-
-  public void setType(TypeEnum type) {
-    this.type = type;
-  }
-
-  public Order status(OrderStatus status) {
+  public void setType(String type) {
+		this.type = type;
+	}
+	  public String getType() {
+			return type;
+		}
+  
+  public Order status(String status) {
     this.status = status;
     return this;
   }
 
-  /**
+
+
+/**
    * Get status
    * @return status
   **/
@@ -220,15 +223,15 @@ public class Order   {
 
   @Valid
 
-  public OrderStatus getStatus() {
+  public String getStatus() {
     return status;
   }
 
-  public void setStatus(OrderStatus status) {
+  public void setStatus(String status) {
     this.status = status;
   }
 
-  public Order error(OrderError error) {
+  public Order error(Map<String, String> error) {
     this.error = error;
     return this;
   }
@@ -240,14 +243,14 @@ public class Order   {
   @ApiModelProperty(value = "")
 
   @Valid
+  public Map<String, String> getError() {
+		return error;
+	}
 
-  public OrderError getError() {
-    return error;
-  }
-
-  public void setError(OrderError error) {
-    this.error = error;
-  }
+	public void setError(Map<String, String> error) {
+		this.error = error;
+	}
+ 
 
 
   @Override
@@ -261,6 +264,7 @@ public class Order   {
     Order order = (Order) o;
     return Objects.equals(this.id, order.id) &&
         Objects.equals(this.offerId, order.offerId) &&
+        Objects.equals(this.userId, order.userId) &&
         Objects.equals(this.productId, order.productId) &&
         Objects.equals(this.identifier, order.identifier) &&
         Objects.equals(this.creationDate, order.creationDate) &&
@@ -269,9 +273,12 @@ public class Order   {
         Objects.equals(this.error, order.error);
   }
 
-  @Override
+  
+
+
+@Override
   public int hashCode() {
-    return Objects.hash(id, offerId, productId, identifier, creationDate, type, status, error);
+    return Objects.hash(id, offerId, userId,productId, identifier, creationDate, type, status, error);
   }
 
   @Override
@@ -281,6 +288,7 @@ public class Order   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    offerId: ").append(toIndentedString(offerId)).append("\n");
+    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
     sb.append("    productId: ").append(toIndentedString(productId)).append("\n");
     sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
     sb.append("    creationDate: ").append(toIndentedString(creationDate)).append("\n");
