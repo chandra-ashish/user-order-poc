@@ -1,0 +1,108 @@
+node {
+    
+    stage('SCM Checkout')
+        {
+            
+                echo "SCM CHECKOUT STARTING..."
+                //git credentialsId: '7acbea31-fbf2-42f7-a1e5-facbdd73cec0', url: 'https://github.com/jglick/simple-maven-project-with-tests.git' 
+                git credentialsId: 'github cred', url: 'https://github.com/chandra-ashish/user-order-poc.git'  
+                echo "SCM CHECKOUT DONE"
+            
+        }
+    stage('Compile-Package'){
+      // Get maven home path
+      def mvnHome =  tool name: 'M3', type: 'maven'   
+      sh "${mvnHome}/bin/mvn -Dmaven.test.failure.ignore=true clean package"
+   }
+//  stage('Junit Test Results') {
+//      junit '**/target/surefire-reports/TEST-*.xml'
+//      archiveArtifacts 'target/*.jar'
+//   }
+//    stage('SonarQube Analysis') {
+//        def mvnHome =  tool name: 'M3', type: 'maven'
+//        withSonarQubeEnv(credentialsId: 'sonarkey') {
+//          sh "${mvnHome}/bin/mvn sonar:sonar"
+//        }
+//    }
+        
+    stage('Docker Build & Push'){
+      def registry="https://index.docker.io/v1/"
+      def registryCredential="docker-hub-cred"
+      echo "INSIDE DOCKER BUILD AND PUSH"
+      def ff=[]
+      def dockerfilepath=""
+      def dir=pwd()
+      echo "${dir}"
+      def filename="Dockerfile"
+      echo "${filename}"
+      def searchstring='**/'+"${filename}"+'*'
+      def f=findFiles(glob: searchstring)
+      echo "${f}"
+      if(f.size()==0)
+        error("No Dockerfiles found")
+      else
+      {
+            for(int i=0;i<f.size();i++)
+            {
+                ff[i]="${dir}"+'/'+"${f[i]}"
+                echo "${ff[i]}"
+                dockerfilepath="${ff[i]}"
+                echo "${dockerfilepath}"
+            }
+        }
+          for(int i=0;i<ff.size();i++)
+                    {
+                        def tempdir=ff[i]
+                        echo "tem dir inside loop"
+                        echo "${tempdir}"
+                       // def registrytag="pocdesign"
+                       // def reponame="ci_demo"
+                        //echo "${reponame}"
+                        //def rname="${env.JOB_NAME}"
+                        //def image="${filename}"
+                       // echo "${image}"
+                        //def filen="${rname}-${image}"
+                        //echo "${filen}"
+                        //def imagename="${filen}:${branch}"
+                        //def imagename="tomcatimage:1"
+                       // echo "${imagename}"
+
+                        def imagetag="ci_demo_test:11"
+                        def imt="babaidevops/ci_demo_test:11"
+                        def imagename="ci_demo_test"
+                        echo "Image tag printed next"
+                        echo "${imagetag}"
+                        echo "Starting Docker Build..."
+                        sh "docker build . -t ${imt} -f ${dockerfilepath}"
+                        echo "Docker Build Done"
+                        echo "Docker Image Tagging and Pushing into Registry started..."
+                        docker.withRegistry("${registry}", "${registryCredential}")
+                        {
+                            echo "Before docker tag"
+                            //sh "docker tag babaidevops/ci_demo_test 11"
+                            echo "Before docker push"
+                            sh "docker push ${imt}"
+                        }
+                        echo "Docker Image pushed into Registry"
+                    }
+
+
+
+   }
+
+
+   
+stage('Deployment')
+        {
+           
+        withKubeConfig([credentialsId: 'kube-credential', serverUrl: 'https://aks-poc-telefonica-dns-e8818784.hcp.centralindia.azmk8s.io:443']) {
+          sh 'kubectl get nodes'
+           sh 'kubectl apply -f /var/lib/jenkins/workspace/Microservice-CICD/deployment.yaml'
+           sh 'kubectl apply -f /var/lib/jenkins/workspace/Microservice-CICD/metadata-name.yaml'
+         }
+                
+        }
+    
+    
+    
+}
