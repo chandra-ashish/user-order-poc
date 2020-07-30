@@ -15,22 +15,22 @@ public class JWTTokenUtil {
    }
    
    private String decodeJWT(String input,String userId) throws UserPermissionException {
-	   byte[] decoded = Base64.getDecoder().decode(input);
-	   String s = new String(decoded, StandardCharsets.UTF_8);
-	   s.indexOf("owner",1);
-	   s=s.substring(s.indexOf("owner",1));
-	   s= s.substring(0 , s.indexOf(","));
-	   s=s.replace("\"", "");
-	   String output[] = s.split(":");
-//	   String []splitInput = input.split("[.]",0);
-//	   byte[] decoded = Base64.getDecoder().decode(splitInput[1]);
+//	   byte[] decoded = Base64.getDecoder().decode(input);
 //	   String s = new String(decoded, StandardCharsets.UTF_8);
-//	   //System.out.println(s);
 //	   s.indexOf("owner",1);
 //	   s=s.substring(s.indexOf("owner",1));
 //	   s= s.substring(0 , s.indexOf(","));
 //	   s=s.replace("\"", "");
 //	   String output[] = s.split(":");
+	   String []splitInput = input.split("[.]",0);
+	   byte[] decoded = Base64.getDecoder().decode(splitInput[1]);
+	   String s = new String(decoded, StandardCharsets.UTF_8);
+	   //System.out.println(s);
+	   s.indexOf("owner",1);
+	   s=s.substring(s.indexOf("owner",1));
+	   s= s.substring(0 , s.indexOf(","));
+	   s=s.replace("\"", "");
+	   String output[] = s.split(":");
 	   if(!output[1].equalsIgnoreCase(userId))
 	   {
 		   throw new UserPermissionException("PERMISSION_DENNIED","Invalid authentication userId not matching");
