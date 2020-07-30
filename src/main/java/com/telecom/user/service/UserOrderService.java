@@ -11,7 +11,7 @@ import com.telecom.user.dto.Price;
 import com.telecom.user.dto.Product;
 import com.telecom.user.model.Phonenumber;
 import com.telecom.user.model.PriceData;
-
+import com.telecom.user.dto.Quotas;
 
 public interface UserOrderService 
 {
@@ -30,13 +30,15 @@ public interface UserOrderService
 	
 	public Phonenumber savePhoneDetails(Phonenumber phonenumber);
 	
-	public PhoneNumbers getPhoneDetailsByUserId(String userId) ;
+	public PhoneNumbers getPhoneDetailsByUserId(String userId,String role) ;
 	
 	public PriceData savePriceDetails(PriceData priceReq);
 	
 	public MoneyAmount saveMoneyDetails(MoneyAmount moneyReq);
 	
 	public List<com.telecom.user.dto.Offer> getOfferDetailsUsers(String userId,String phoneNumber);
+	
+	public Quotas saveQuotaDetails(Quotas quotas);
 //	
 //	public List<Order> getAllOrders();
 	

@@ -16,12 +16,14 @@ import com.telecom.user.model.Order;
 import com.telecom.user.model.Phonenumber;
 import com.telecom.user.model.PriceData;
 import com.telecom.user.model.Product;
+import com.telecom.user.model.Quota;
 import com.telecom.user.repository.MoneyRepository;
 import com.telecom.user.repository.OfferRepository;
 import com.telecom.user.repository.OrderRepository;
 import com.telecom.user.repository.PhoneRepository;
 import com.telecom.user.repository.PriceRepository;
 import com.telecom.user.repository.ProductRepository;
+import com.telecom.user.repository.QuotaRepository;
 import com.telecom.user.dto.MoneyAmount;
 
 @Component
@@ -45,6 +47,9 @@ public class UserOrderDaoImpl implements UserOrderDao
 	
 	@Autowired
 	PriceRepository priceRepository;
+	
+	@Autowired
+	QuotaRepository quotaRepository;
 	
 	@Override
 	public Offer saveOfferDetails(Offer offerReq)
@@ -113,6 +118,12 @@ public class UserOrderDaoImpl implements UserOrderDao
 	{
 		return priceRepository.save(priceReq);
 	}
+	@Override
+	public List<Quota> saveQuotatDetails(List<Quota> quotaList)
+	{
+		return quotaRepository.saveAll(quotaList);
+	}
+	
 	
 	@Override
 	public Price getPriceDetails(String  price_id)
@@ -137,6 +148,11 @@ public class UserOrderDaoImpl implements UserOrderDao
 	public List<Offer> getOfferDetails()
 	{
 		return offerRepository.findAll();
+	}
+	@Override
+	public List<Quota> getQuotaDetails()
+	{
+		return quotaRepository.findAll();
 	}
 //	
 //	@Override

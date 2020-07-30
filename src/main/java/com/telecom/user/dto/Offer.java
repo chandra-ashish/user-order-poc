@@ -4,7 +4,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.telecom.user.dto.OfferCategory;
@@ -27,6 +30,7 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Offer object")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-27T08:22:02.967Z")
+@JsonInclude(Include.NON_NULL)
 @Table
 public class Offer   {
   @PrimaryKey

@@ -10,6 +10,7 @@ import com.telecom.user.model.Order;
 import com.telecom.user.model.Phonenumber;
 import com.telecom.user.model.PriceData;
 import com.telecom.user.model.Product;
+import com.telecom.user.model.Quota;
 
 public interface UserOrderDao 
 {
@@ -29,6 +30,10 @@ public interface UserOrderDao
 	public Price getPriceDetails(String  price_id);
 	
 	public List<Offer> getOfferDetails();
+	
+	public List<Quota> saveQuotatDetails(List<Quota> quotaList);
+	
+	public List<Quota> getQuotaDetails();
 //	
 //	public List<Order> getAllOrders();
 	

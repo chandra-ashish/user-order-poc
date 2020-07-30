@@ -99,7 +99,7 @@ public class OrderTest {
 	
 		//assertEquals(orderResponseObj,mapper.readValue(result.getResponse().getContentAsString(),OrderUIResponse.class));
 	//	assertNotNull(result.getResponse());
-		assertEquals(200,result.getResponse().getStatus());
+		assertEquals(400,result.getResponse().getStatus());
 		}
 	
 

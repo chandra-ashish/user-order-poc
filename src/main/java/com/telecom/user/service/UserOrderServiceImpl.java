@@ -7,12 +7,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.telecom.user.controller.UserOrderController;
 import com.telecom.user.dao.UserOrderDao;
+import com.telecom.user.dto.DataQuota;
 import com.telecom.user.dto.Description;
 import com.telecom.user.dto.Descriptions;
 import com.telecom.user.model.Offer;
@@ -21,9 +26,13 @@ import com.telecom.user.dto.OrderStatus;
 import com.telecom.user.dto.PhoneNumbers;
 import com.telecom.user.dto.Price;
 import com.telecom.user.dto.Product;
+import com.telecom.user.dto.Quotas;
+import com.telecom.user.dto.SmsQuota;
+import com.telecom.user.dto.VoiceQuota;
 import com.telecom.user.model.Money;
 import com.telecom.user.model.Phonenumber;
 import com.telecom.user.model.PriceData;
+import com.telecom.user.model.Quota;
 import com.telecom.user.repository.OfferRepository;
 import com.telecom.user.dto.MoneyAmount;
 import com.telecom.user.dto.OfferCategory;
@@ -36,6 +45,7 @@ public class UserOrderServiceImpl implements UserOrderService
 	
 	@Autowired
 	UserOrderDao orderDao;
+	 private static final Logger logger = LogManager.getLogger(UserOrderServiceImpl.class);
 	
 	@Override
 	public Offer saveOfferDetails(OfferReq offerReq)
@@ -74,6 +84,7 @@ public class UserOrderServiceImpl implements UserOrderService
 		 com.telecom.user.model.Order orderDb = new com.telecom.user.model.Order();
 		Order orderDto = new Order();
 		orderDb.setId(java.util.UUID.randomUUID().toString());
+		
 		orderDb.setIdentifier(phoneNumber);
 		orderDb.setOfferId(offerId);
 		orderDb.setCreationDate(getCurrentTimeInStr());
@@ -86,6 +97,7 @@ public class UserOrderServiceImpl implements UserOrderService
 		orderDto.setType(Order.TypeEnum.PURCHASE);
 		orderDto.setCreationDate(new Date());
 		orderDao.saveOrderDetails(orderDb);
+		logger.info("Order created successfully for user" + userId + "with PhoneNumber" + phoneNumber + "::", orderDb.getId());
 		return orderDto;
 	}
 
@@ -124,7 +136,7 @@ public class UserOrderServiceImpl implements UserOrderService
 		Order order = new Order();
 		com.telecom.user.model.Order ordetDb = new com.telecom.user.model.Order();
 		try {
-		
+			logger.info("Getting order details for orderId" ,orderId);
 			ordetDb = orderDao.getOrderByOrderId(orderId);
 	
 		   if(ordetDb.getUserId().equalsIgnoreCase(userId))
@@ -177,11 +189,12 @@ public class UserOrderServiceImpl implements UserOrderService
 	}
 	
 	@Override
-	public PhoneNumbers getPhoneDetailsByUserId(String userId)
+	public PhoneNumbers getPhoneDetailsByUserId(String userId,String role)
 	{
 	PhoneNumbers phoneNum = new PhoneNumbers();
 	List<Phonenumber> phoneList = new ArrayList<Phonenumber>();
 	List<String> numberList = new ArrayList<String>();
+	List<String> distinctnumberList = new ArrayList<String>();
 	try {
 	
 		phoneList = orderDao.getPhoneDetailsByUserId(userId);
@@ -189,14 +202,20 @@ public class UserOrderServiceImpl implements UserOrderService
 		if(!phoneList.isEmpty())
 		{
 			phoneList.forEach(phoneNumber->{
-				if(phoneNumber.getUserId().equalsIgnoreCase(userId))
+				if(phoneNumber.getUserId().equalsIgnoreCase(userId) && !role.equalsIgnoreCase("devportal"))
 				{
 					numberList.add(phoneNumber.getIdentifier());
 				}
+				else if(role.equalsIgnoreCase("devportal"))
+				{
+					numberList.add(phoneNumber.getIdentifier());
+					
+				}
 			});
+		 distinctnumberList = numberList.stream().distinct().collect(Collectors.toList());
 		}
 		phoneNum.setUserId(userId);
-		phoneNum.setIdentifiers(numberList);
+		phoneNum.setIdentifiers(distinctnumberList);
 	
 	}catch(Exception e) {	
 	}
@@ -268,7 +287,125 @@ public class UserOrderServiceImpl implements UserOrderService
 		
 	}
 	
+	@Override
+	public Quotas saveQuotaDetails(Quotas quotas)
+	{
+		List<Quota> quotaList = new ArrayList<Quota>();
+		if(quotas != null && quotas.getData() != null && !quotas.getData().isEmpty())
+		{
+			for(DataQuota dataQ:quotas.getData())
+			{
+				Quota quota = new Quota();
+				quota.setId(java.util.UUID.randomUUID().toString());
+				quota.setMax(dataQ.getMax().intValueExact());
+				//quota.setOrigins(
+						if(dataQ.getOrigins() != null && !dataQ.getOrigins().isEmpty())
+						{
+							List<String> originList = new ArrayList<String>();
+							dataQ.getOrigins().forEach(origin->{
+								originList.add(origin.toString());
+							});
+							quota.setOrigins(originList);
+						}
+						if(dataQ.getTimeBands() != null && !dataQ.getTimeBands().isEmpty())
+						{
+							List<String> timrbrandList = new ArrayList<String>();
+							dataQ.getTimeBands().forEach(brand->{
+								timrbrandList.add(brand.toString());
+							});
+							quota.setTime_bands(timrbrandList);
+						}
+						quota.setType("data");	
+						quota.setUnit(dataQ.getUnit().toString());
+						quotaList.add(quota);
+			}
+		}
+		if(quotas != null && quotas.getSms() != null && !quotas.getSms().isEmpty())
+		{
+			for(SmsQuota smsQ:quotas.getSms())
+			{
+				Quota quota = new Quota();
+				quota.setId(java.util.UUID.randomUUID().toString());
+				quota.setMax(smsQ.getMax().intValueExact());
+				//quota.setOrigins(
+						if(smsQ.getOrigins() != null && !smsQ.getOrigins().isEmpty())
+						{
+							List<String> originList = new ArrayList<String>();
+							smsQ.getOrigins().forEach(origin->{
+								originList.add(origin.toString());
+							});
+							quota.setOrigins(originList);
+						}
+						if(smsQ.getTimeBands() != null && !smsQ.getTimeBands().isEmpty())
+						{
+							List<String> timrbrandList = new ArrayList<String>();
+							smsQ.getTimeBands().forEach(brand->{
+								timrbrandList.add(brand.toString());
+							});
+							quota.setTime_bands(timrbrandList);
+						}
+						if(smsQ.getDestinations() != null && !smsQ.getDestinations().isEmpty())
+						{
+							List<String> destinationList = new ArrayList<String>();
+							smsQ.getDestinations().forEach(destination->{
+								destinationList.add(destination.toString());
+							});
+							quota.setDestinations(destinationList);
+						}
+						quota.setType("sms");	
+						quota.setUnit(smsQ.getUnit().toString());
+						quotaList.add(quota);
+			}
+		}
+		if(quotas != null && quotas.getVoice() != null && !quotas.getVoice().isEmpty())
+		{
+			for(VoiceQuota voiceQ:quotas.getVoice())
+			{
+				Quota quota = new Quota();
+				quota.setId(java.util.UUID.randomUUID().toString());
+				quota.setMax(voiceQ.getMax().intValueExact());
+				//quota.setOrigins(
+						if(voiceQ.getOrigins() != null && !voiceQ.getOrigins().isEmpty())
+						{
+							List<String> originList = new ArrayList<String>();
+							voiceQ.getOrigins().forEach(origin->{
+								originList.add(origin.toString());
+							});
+							quota.setOrigins(originList);
+						}
+						if(voiceQ.getTimeBands() != null && !voiceQ.getTimeBands().isEmpty())
+						{
+							List<String> timrbrandList = new ArrayList<String>();
+							voiceQ.getTimeBands().forEach(brand->{
+								timrbrandList.add(brand.toString());
+							});
+							quota.setTime_bands(timrbrandList);
+						}
+						if(voiceQ.getDestinations() != null && !voiceQ.getDestinations().isEmpty())
+						{
+							List<String> destinationList = new ArrayList<String>();
+							voiceQ.getDestinations().forEach(destination->{
+								destinationList.add(destination.toString());
+							});
+							quota.setDestinations(destinationList);
+						}
+						quota.setType("voice");	
+						quota.setUnit(voiceQ.getUnit().toString());
+						quotaList.add(quota);
+			}
+		}
+		
+		orderDao.saveQuotatDetails(quotaList);
+		return quotas;
+	}
 	
+	public Quotas getQuotaDetails(List<String> quotaIds)
+	{
+		Quotas quotas = new Quotas();
+		List<Quota> quotaList = new ArrayList<Quota>();
+		quotaList = orderDao.getQuotaDetails();
+		return quotas;
+	}
 	
 	public OfferedProduct convertProductModel(com.telecom.user.model.Product productDb)
 	{
