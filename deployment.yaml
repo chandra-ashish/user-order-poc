@@ -6,8 +6,7 @@ metadata:
   labels:
     k8s-app: telpoc
     k8s-project: telpoc
-  annotations:
-    configHash: "${env.BUILD_NUMBER}"
+
     
 spec:
   replicas: 1 # Replica Count default value:1 set by program, put exact replica count in place of parameter if needed
@@ -21,13 +20,15 @@ spec:
       labels:
         k8s-app: telpoc
         k8s-project: telpoc
+      annotations:
+        configHash: "${env.BUILD_NUMBER}"  
         
       
     spec:
       
       containers:
       - name: telpoc-demo-container
-        image: babaidevops/ci_demo_test:16
+        image: babaidevops/ci_demo_test:17
         livenessProbe:
           httpGet:
             path: /users/health/status
