@@ -2,7 +2,7 @@
 FROM maven:3.6.3-jdk-8-slim AS stage1
 WORKDIR /home/app
 COPY . /home/app/
-RUN mvn -f /home/app/pom.xml -Dmaven.test.failure.ignore=true clean package
+RUN mvn -f /home/app/pom.xml -Dmaven.test.skip=true package
 
 # Create an Image
 FROM openjdk:8-jdk-alpine
