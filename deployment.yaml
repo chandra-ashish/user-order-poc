@@ -27,7 +27,7 @@ spec:
       
       containers:
       - name: telpoc-demo-container
-        image: babaidevops/ci_demo_test:15
+        image: babaidevops/ci_demo_test:16
         livenessProbe:
           httpGet:
             path: /users/health/status
