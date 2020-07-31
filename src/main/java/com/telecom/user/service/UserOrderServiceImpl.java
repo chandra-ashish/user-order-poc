@@ -14,7 +14,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 
 import com.telecom.user.controller.UserOrderController;
 import com.telecom.user.dao.UserOrderDao;
@@ -39,7 +43,6 @@ import com.telecom.user.dto.MoneyAmount;
 import com.telecom.user.dto.OfferCategory;
 import com.telecom.user.dto.OfferReq;
 import com.telecom.user.dto.OfferedProduct;
-import org.springframework.kafka.core.KafkaTemplate;
 
 @Service
 public class UserOrderServiceImpl implements UserOrderService
@@ -49,8 +52,8 @@ public class UserOrderServiceImpl implements UserOrderService
 	UserOrderDao orderDao;
 	 private static final Logger logger = LogManager.getLogger(UserOrderServiceImpl.class);
 	
-	 @Autowired
-	 private KafkaTemplate<String, String> kafkaTemplate;
+	
+	 private RestTemplate resttemplate;
 	 
 	@Override
 	public Offer saveOfferDetails(OfferReq offerReq)
@@ -101,9 +104,13 @@ public class UserOrderServiceImpl implements UserOrderService
 		orderDto.setStatus(OrderStatus.PENDING);
 		orderDto.setType(Order.TypeEnum.PURCHASE);
 		orderDto.setCreationDate(new Date());
-		orderDao.saveOrderDetails(orderDb);
-		logger.info("Order created successfully for user" + userId + "with PhoneNumber" + phoneNumber + "::", orderDb.getId());
-		sendMessage("Order created successfully for user" + userId + "with PhoneNumber" + phoneNumber + "::" +orderDb.getId());
+		 com.telecom.user.model.Order orderDbResp = new com.telecom.user.model.Order();
+		 orderDbResp = orderDao.saveOrderDetails(orderDb);
+		logger.info("Order created successfully for user" + userId + "with PhoneNumber" + phoneNumber + "::", orderDbResp.getId());
+		String message ="Order created successfully for user" + userId + "with PhoneNumber " + phoneNumber + ":: " +orderDbResp.getId();
+		resttemplate = new RestTemplate();
+	  String	createPersonUrl ="http://52.172.206.112:9000/kafka/publish" ;
+		 resttemplate.postForObject(createPersonUrl, message, String.class);
 		return orderDto;
 	}
 
@@ -456,9 +463,5 @@ public class UserOrderServiceImpl implements UserOrderService
 	return date;
 	}
 	
-	public void sendMessage(String message) {
-		logger.info(String.format("$$ -> Producing message to Kafka --> %s", message));
-		this.kafkaTemplate.send("ORDERS", message);
-	}
-
+	
 }
