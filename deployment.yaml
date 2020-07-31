@@ -28,21 +28,7 @@ spec:
       
       containers:
       - name: telpoc-demo-container
-        image: babaidevops/ci_demo_test:18
-        livenessProbe:
-          httpGet:
-            path: /users/health/status
-            port: 8084
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 3
-        readinessProbe:
-          httpGet:
-            path: /users/health/status
-            port: 8084
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          timeoutSeconds: 3
+        image: babaidevops/ci_demo_test:19
         imagePullPolicy: Always 
         
        
