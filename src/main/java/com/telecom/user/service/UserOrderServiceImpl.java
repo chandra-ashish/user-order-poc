@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +39,7 @@ import com.telecom.user.dto.MoneyAmount;
 import com.telecom.user.dto.OfferCategory;
 import com.telecom.user.dto.OfferReq;
 import com.telecom.user.dto.OfferedProduct;
+import org.springframework.kafka.core.KafkaTemplate;
 
 @Service
 public class UserOrderServiceImpl implements UserOrderService
@@ -47,6 +49,9 @@ public class UserOrderServiceImpl implements UserOrderService
 	UserOrderDao orderDao;
 	 private static final Logger logger = LogManager.getLogger(UserOrderServiceImpl.class);
 	
+	 @Autowired
+	 private KafkaTemplate<String, String> kafkaTemplate;
+	 
 	@Override
 	public Offer saveOfferDetails(OfferReq offerReq)
 	{
@@ -98,6 +103,7 @@ public class UserOrderServiceImpl implements UserOrderService
 		orderDto.setCreationDate(new Date());
 		orderDao.saveOrderDetails(orderDb);
 		logger.info("Order created successfully for user" + userId + "with PhoneNumber" + phoneNumber + "::", orderDb.getId());
+		sendMessage("Order created successfully for user" + userId + "with PhoneNumber" + phoneNumber + "::" +orderDb.getId());
 		return orderDto;
 	}
 
@@ -261,6 +267,7 @@ public class UserOrderServiceImpl implements UserOrderService
 				List<Price> priceList = new ArrayList<Price>();
 				BeanUtils.copyProperties(offerObj, offerResp);
 				OfferedProduct productdto = convertProductModel(orderDao.getProductDetails(offerObj.getProduct_id()));
+				offerResp.setId(UUID.fromString(offerObj.getId()));
 				offerResp.setProduct(productdto);
 				for(String offerId :offerObj.getPrices())
 				{
@@ -447,6 +454,11 @@ public class UserOrderServiceImpl implements UserOrderService
 	//String text = sdf.format(date);
 	Date date = sdf.parse(text);
 	return date;
+	}
+	
+	public void sendMessage(String message) {
+		logger.info(String.format("$$ -> Producing message to Kafka --> %s", message));
+		this.kafkaTemplate.send("ORDERS", message);
 	}
 
 }
