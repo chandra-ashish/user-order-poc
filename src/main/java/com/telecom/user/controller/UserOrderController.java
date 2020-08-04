@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -105,7 +106,9 @@ public class UserOrderController {
 		if (orderReq != null && orderReq.getOfferId() != null) {
 			offerId = orderReq.getOfferId();
 		}
-		return ResponseEntity.ok(userOrderService.saveOrderDetails(userId, phoneNumber, offerId,coreelatorId));
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-correlator", coreelatorId);
+		return ResponseEntity.ok().headers(responseHeaders).body(userOrderService.saveOrderDetails(userId, phoneNumber, offerId,coreelatorId));
 	}
 	
 	@PostMapping(value = "/{user_id}/phone-numbers/{phone_number}/orders/purchase/payment")
@@ -124,7 +127,9 @@ public class UserOrderController {
 		}
 		userOrderValidation.validateUserOrderDetailsPhone(userId, phoneNumber,orderId);
 		logger.info("x-correlator " + coreelatorId + " # Create Order -" + LocalDateTime.now() + " - User validated with authentication and proceed to raise order for offer ", orderId);
-		return ResponseEntity.ok(userOrderService.sendPaymentDetails(userId, phoneNumber, orderId,coreelatorId));
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-correlator", coreelatorId);
+		return ResponseEntity.ok().headers(responseHeaders).body(userOrderService.sendPaymentDetails(userId, phoneNumber, orderId,coreelatorId));
 	}
 
 	@GetMapping(path = "/{user_id}/orders", produces = "application/json")
@@ -139,7 +144,9 @@ public class UserOrderController {
 		userOrderValidation.validateUserDetails(userId);
 		Orders orders = new Orders();
 		orders.addAll(userOrderService.getOrderDetailsByUserId(userId,coreelatorId));
-		return ResponseEntity.ok(orders);
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-correlator", coreelatorId);
+		return ResponseEntity.ok().headers(responseHeaders).body(orders);
 	}
 
 	@GetMapping(path = "/{user_id}/orders/{order_id}", produces = "application/json")
@@ -155,7 +162,9 @@ public class UserOrderController {
 		userOrderValidation.validateUserDetails(userId);
 		Order order = new Order();
 		order = userOrderService.getOrderDetailsByOrderId(userId, orderId,coreelatorId);
-		return ResponseEntity.ok(order);
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-correlator", coreelatorId);
+		return ResponseEntity.ok().headers(responseHeaders).body(order);
 	}
 
 	@GetMapping(path = "/{user_id}/phone-numbers/{phone_number}/orders", produces = "application/json")
@@ -171,7 +180,9 @@ public class UserOrderController {
 		userOrderValidation.validateUserOrderDetails(userId, phonenumber);
 		Orders orders = new Orders();
 		orders.addAll(userOrderService.getOrderDetailsByPhoneNumber(userId, phonenumber,coreelatorId));
-		return ResponseEntity.ok(orders);
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-correlator", coreelatorId);
+		return ResponseEntity.ok().headers(responseHeaders).body(orders);
 	}
 
 	@GetMapping(path = "/{user_id}/phone-numbers", produces = "application/json")
@@ -186,7 +197,9 @@ public class UserOrderController {
 		userOrderValidation.validateUserDetails(userId);
 		PhoneNumbers phnNm = new PhoneNumbers();
 		phnNm = userOrderService.getPhoneDetailsByUserId(userId,coreelatorId);
-		return ResponseEntity.ok(phnNm);
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-correlator", coreelatorId);
+		return ResponseEntity.ok().headers(responseHeaders).body(phnNm);
 	}
 
 	@GetMapping(value = "/{user_id}/phone-numbers/{phone_number}/offers")
@@ -200,7 +213,9 @@ public class UserOrderController {
 		String resp = jwtTokenUtil.validateAuthorizationDetails(inputToken,userId);
 		logger.info("x-correlator " + coreelatorId + " # Fetch offers by userId and PhoneNumber -" + LocalDateTime.now() + " -   User from Auth validation", resp);
 		userOrderValidation.validateUserOrderDetails(userId, phoneNumber);
-		return ResponseEntity.ok(userOrderService.getOfferDetailsUsers(userId, phoneNumber,coreelatorId));
+		HttpHeaders responseHeaders = new HttpHeaders();
+	    responseHeaders.set("x-correlator", coreelatorId);
+		return ResponseEntity.ok().headers(responseHeaders).body(userOrderService.getOfferDetailsUsers(userId, phoneNumber,coreelatorId));
 	}
 
 }
