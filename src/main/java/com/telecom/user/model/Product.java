@@ -2,13 +2,8 @@ package com.telecom.user.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.telecom.user.dto.Descriptions;
-import com.telecom.user.dto.ProductType;
-import com.telecom.user.dto.SubscriptionType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +44,14 @@ public class Product   {
   @Column("subscription_type")
   @JsonProperty("subscription_type")
   private String subscriptionType = null;
+  
+  @Column("quota")
+  @JsonProperty("quotaIds")
+  private List<String>  quotaIds= null;
+
+  @Column("packages")
+  @JsonProperty("packages")
+  private Map<String ,String> packages = null;
 
   
   public Product product_id(String product_id) {
@@ -164,7 +167,23 @@ public void setSubscriptionType(String subscriptionType) {
  
 
 
-  @Override
+  public List<String> getQuotaIds() {
+	return quotaIds;
+}
+
+public void setQuotaIds(List<String> quotaIds) {
+	this.quotaIds = quotaIds;
+}
+
+public Map<String, String> getPackages() {
+	return packages;
+}
+
+public void setPackages(Map<String, String> packages) {
+	this.packages = packages;
+}
+
+@Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;

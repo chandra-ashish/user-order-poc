@@ -3,10 +3,7 @@ package com.telecom.user.dto;
 import java.util.Objects;
 import com.telecom.user.dto.Offer;
 import java.util.ArrayList;
-import java.util.List;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * Offers
@@ -16,7 +13,12 @@ import javax.validation.constraints.*;
 
 public class Offers extends ArrayList<Offer>  {
 
-  @Override
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+@Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;

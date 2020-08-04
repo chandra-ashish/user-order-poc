@@ -14,12 +14,12 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-27T08:22:02.967Z")
 
-public class CreatePurchaseOrderByPhoneNumberInvoice   {
-  @JsonProperty("offer_id")
-  private String offerId = null;
+public class CreatePurchaseOrderPayment   {
+  @JsonProperty("order_id")
+  private String orderId = null;
 
-  public CreatePurchaseOrderByPhoneNumberInvoice offerId(String offerId) {
-    this.offerId = offerId;
+  public CreatePurchaseOrderPayment orderId(String orderId) {
+    this.orderId = orderId;
     return this;
   }
 
@@ -29,15 +29,13 @@ public class CreatePurchaseOrderByPhoneNumberInvoice   {
   **/
   @ApiModelProperty(required = true, value = "Id of the offer related to the new order")
   @NotNull
+  public String getOrderId() {
+		return orderId;
+	}
 
-
-  public String getOfferId() {
-    return offerId;
-  }
-
-  public void setOfferId(String offerId) {
-    this.offerId = offerId;
-  }
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
 
 
   @Override
@@ -48,21 +46,23 @@ public class CreatePurchaseOrderByPhoneNumberInvoice   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CreatePurchaseOrderByPhoneNumberInvoice createPurchaseOrderByPhoneNumberInvoice = (CreatePurchaseOrderByPhoneNumberInvoice) o;
-    return Objects.equals(this.offerId, createPurchaseOrderByPhoneNumberInvoice.offerId);
+    CreatePurchaseOrderPayment createPurchaseOrderPayment = (CreatePurchaseOrderPayment) o;
+    return Objects.equals(this.orderId, createPurchaseOrderPayment.orderId);
   }
 
-  @Override
+ 
+
+@Override
   public int hashCode() {
-    return Objects.hash(offerId);
+    return Objects.hash(orderId);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class CreatePurchaseOrderByPhoneNumberInvoice {\n");
+    sb.append("class CreatePurchaseOrderPayment {\n");
     
-    sb.append("    offerId: ").append(toIndentedString(offerId)).append("\n");
+    sb.append("    offerId: ").append(toIndentedString(orderId)).append("\n");
     sb.append("}");
     return sb.toString();
   }

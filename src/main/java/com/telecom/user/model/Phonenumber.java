@@ -1,22 +1,13 @@
 package com.telecom.user.model;
 
-import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.telecom.user.dto.OrderError;
-import com.telecom.user.dto.OrderStatus;
-
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * Information related to an order
@@ -40,6 +31,7 @@ public class Phonenumber   {
   @Column("identifier")
   @JsonProperty("identifier")
   private String identifier = null;
+  
 
   public Phonenumber id(String id) {
     this.id = id;
@@ -108,7 +100,7 @@ public class Phonenumber   {
 
  
 
-  @Override
+@Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;

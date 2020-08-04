@@ -2,28 +2,26 @@ package com.telecom.user.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.telecom.user.dto.Descriptions;
-import com.telecom.user.dto.OfferedProduct;
 import com.telecom.user.dto.ProductType;
 import com.telecom.user.dto.SubscriptionType;
+import java.util.List;
+
+import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Object that models an offered product
+ * Object that model a product definition
  */
-@ApiModel(description = "Object that models an offered product")
+@ApiModel(description = "Object that model a product definition")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-27T08:22:02.967Z")
 
-@JsonInclude(Include.NON_NULL)
-public class OfferedProduct   {
+public class ProductReq   {
   @JsonProperty("display_name")
   private String displayName = null;
 
@@ -35,31 +33,15 @@ public class OfferedProduct   {
 
   @JsonProperty("subscription_type")
   private SubscriptionType subscriptionType = null;
-  
-  @JsonProperty("quota")
-  private Quotas quota = null;
+ 
+  @Column("quotaIds")
+  @JsonProperty("quotaIds")
+  private List<String>  quotaIds= null;
 
   @JsonProperty("packages")
   private Packages packages = null;
 
-
-  public Quotas getQuota() {
-	return quota;
-}
-
-public void setQuota(Quotas quota) {
-	this.quota = quota;
-}
-
-public Packages getPackages() {
-	return packages;
-}
-
-public void setPackages(Packages packages) {
-	this.packages = packages;
-}
-
-public OfferedProduct displayName(String displayName) {
+  public ProductReq displayName(String displayName) {
     this.displayName = displayName;
     return this;
   }
@@ -80,7 +62,7 @@ public OfferedProduct displayName(String displayName) {
     this.displayName = displayName;
   }
 
-  public OfferedProduct productType(ProductType productType) {
+  public ProductReq productType(ProductType productType) {
     this.productType = productType;
     return this;
   }
@@ -102,7 +84,7 @@ public OfferedProduct displayName(String displayName) {
     this.productType = productType;
   }
 
-  public OfferedProduct descriptions(Descriptions descriptions) {
+  public ProductReq descriptions(Descriptions descriptions) {
     this.descriptions = descriptions;
     return this;
   }
@@ -123,7 +105,7 @@ public OfferedProduct displayName(String displayName) {
     this.descriptions = descriptions;
   }
 
-  public OfferedProduct subscriptionType(SubscriptionType subscriptionType) {
+  public ProductReq subscriptionType(SubscriptionType subscriptionType) {
     this.subscriptionType = subscriptionType;
     return this;
   }
@@ -144,9 +126,26 @@ public OfferedProduct displayName(String displayName) {
     this.subscriptionType = subscriptionType;
   }
 
+ 
 
 
-  @Override
+public List<String> getQuotaIds() {
+	return quotaIds;
+}
+
+public void setQuotaIds(List<String> quotaIds) {
+	this.quotaIds = quotaIds;
+}
+
+public Packages getPackages() {
+	return packages;
+}
+
+public void setPackages(Packages packages) {
+	this.packages = packages;
+}
+
+@Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
@@ -154,11 +153,12 @@ public OfferedProduct displayName(String displayName) {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OfferedProduct offeredProduct = (OfferedProduct) o;
-    return Objects.equals(this.displayName, offeredProduct.displayName) &&
-        Objects.equals(this.productType, offeredProduct.productType) &&
-        Objects.equals(this.descriptions, offeredProduct.descriptions) &&
-        Objects.equals(this.subscriptionType, offeredProduct.subscriptionType) ;
+    ProductReq product = (ProductReq) o;
+    return Objects.equals(this.displayName, product.displayName) &&
+        Objects.equals(this.productType, product.productType) &&
+        Objects.equals(this.descriptions, product.descriptions) &&
+        Objects.equals(this.subscriptionType, product.subscriptionType) ;
+
   }
 
   @Override
@@ -169,12 +169,13 @@ public OfferedProduct displayName(String displayName) {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OfferedProduct {\n");
+    sb.append("class Product {\n");
     
     sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
     sb.append("    productType: ").append(toIndentedString(productType)).append("\n");
     sb.append("    descriptions: ").append(toIndentedString(descriptions)).append("\n");
     sb.append("    subscriptionType: ").append(toIndentedString(subscriptionType)).append("\n");
+
     sb.append("}");
     return sb.toString();
   }

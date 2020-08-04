@@ -1,27 +1,33 @@
 package com.telecom.user.exception;
 
-public class OrderNotFoundException extends Exception {
+public class OrderValidationException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
 	private String errorCode;
 	private String errorMessage;
 	
-	public OrderNotFoundException(String errorCode, Throwable t) {
+	public OrderValidationException(String errorCode, Throwable t) {
 		super("", t);
 	}
 	
-	public OrderNotFoundException(String errorMessage) {
+	public OrderValidationException(String errorMessage) {
 		super(errorMessage);
+		this.errorMessage = errorMessage;
+	}
+	
+	public OrderValidationException(String errorCode, String errorMessage) {
+		super();
+		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
 	}
 
 
-	public OrderNotFoundException(String errorCode, String errorMessage, Throwable t) {
+	public OrderValidationException(String errorCode, String errorMessage, Throwable t) {
 		super(errorMessage, t);
 		this.errorCode = errorCode;
 		this.errorMessage = errorMessage;
-		System.out.println("BaseTSLException-1");
+		
 	}
 
 	public String getErrorCode() {

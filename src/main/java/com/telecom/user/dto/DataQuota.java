@@ -3,10 +3,12 @@ package com.telecom.user.dto;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.telecom.user.dto.CommonQuota;
 import com.telecom.user.dto.Origin;
 import com.telecom.user.dto.TimeBand;
 import java.math.BigDecimal;
@@ -22,7 +24,7 @@ import javax.validation.constraints.*;
 @ApiModel(description = "Data quota information")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-27T08:22:02.967Z")
-
+@JsonInclude(Include.NON_NULL)
 public class DataQuota   {
   @JsonProperty("max")
   private BigDecimal max = null;

@@ -1,12 +1,14 @@
 package com.telecom.user.repository;
 
 
+
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
 
-import com.telecom.user.model.PriceData;
+import com.telecom.user.model.User;
 @Repository
-public interface PriceRepository extends CassandraRepository<PriceData, String> 
+public interface UserRepository extends CassandraRepository<User, String> 
 {
-
+	
+	
 }

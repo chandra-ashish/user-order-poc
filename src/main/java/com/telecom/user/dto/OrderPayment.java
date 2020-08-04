@@ -1,4 +1,4 @@
-package com.telecom.user.exception;
+package com.telecom.user.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,35 +14,21 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-27T08:22:02.967Z")
 
-public class OrderError   {
-  @JsonProperty("code")
-  private String code = null;
+public class OrderPayment   {
+  @JsonProperty("order_id")
+  private String orderId = null;
 
   @JsonProperty("description")
   private String description = null;
+  
+  @JsonProperty("identifier")
+  private String identifier = null;
+ 
+  @JsonProperty("coreelatorId")
+  private String coreelatorId = null;
+  
 
-  public OrderError code(String code) {
-    this.code = code;
-    return this;
-  }
-
-  /**
-   * Error code produces when trying to purchase an offer
-   * @return code
-  **/
-  @ApiModelProperty(required = true, value = "Error code produces when trying to purchase an offer")
-  @NotNull
-
-
-  public String getCode() {
-    return code;
-  }
-
-  public void setCode(String code) {
-    this.code = code;
-  }
-
-  public OrderError description(String description) {
+  public OrderPayment description(String description) {
     this.description = description;
     return this;
   }
@@ -64,7 +50,32 @@ public class OrderError   {
   }
 
 
-  @Override
+  public String getOrderId() {
+	return orderId;
+}
+
+public void setOrderId(String orderId) {
+	this.orderId = orderId;
+}
+
+public String getIdentifier() {
+	return identifier;
+}
+
+public void setIdentifier(String identifier) {
+	this.identifier = identifier;
+}
+
+
+public String getCoreelatorId() {
+	return coreelatorId;
+}
+
+public void setCoreelatorId(String coreelatorId) {
+	this.coreelatorId = coreelatorId;
+}
+
+@Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;
@@ -72,22 +83,24 @@ public class OrderError   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    OrderError orderError = (OrderError) o;
-    return Objects.equals(this.code, orderError.code) &&
+    OrderPayment orderError = (OrderPayment) o;
+    return Objects.equals(this.orderId, orderError.orderId) &&
+    		Objects.equals(this.identifier, orderError.identifier) &&
         Objects.equals(this.description, orderError.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(code, description);
+    return Objects.hash(orderId,identifier, description);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class OrderError {\n");
+    sb.append("class OrderPayment {\n");
     
-    sb.append("    code: ").append(toIndentedString(code)).append("\n");
+    sb.append("    orderId: ").append(toIndentedString(orderId)).append("\n");
+    sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("}");
     return sb.toString();

@@ -2,8 +2,6 @@ package com.telecom.user.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.telecom.user.dto.Origin;
 import com.telecom.user.dto.TimeBand;

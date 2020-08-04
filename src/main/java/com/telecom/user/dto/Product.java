@@ -2,14 +2,11 @@ package com.telecom.user.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.telecom.user.dto.Descriptions;
 import com.telecom.user.dto.ProductType;
 import com.telecom.user.dto.SubscriptionType;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -33,7 +30,12 @@ public class Product   {
 
   @JsonProperty("subscription_type")
   private SubscriptionType subscriptionType = null;
+ 
+  @JsonProperty("quota")
+  private Quotas quota = null;
 
+  @JsonProperty("packages")
+  private Packages packages = null;
 
   public Product displayName(String displayName) {
     this.displayName = displayName;
@@ -123,7 +125,23 @@ public class Product   {
  
 
 
-  @Override
+  public Quotas getQuota() {
+	return quota;
+}
+
+public void setQuota(Quotas quota) {
+	this.quota = quota;
+}
+
+public Packages getPackages() {
+	return packages;
+}
+
+public void setPackages(Packages packages) {
+	this.packages = packages;
+}
+
+@Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
       return true;

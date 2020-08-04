@@ -2,7 +2,9 @@ package com.telecom.user.dto;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import com.telecom.user.dto.DataQuota;
@@ -12,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * It applies for product_type mobile, value_added_service and bolt-on, and provides information on available data, voice and sms quota
@@ -20,7 +21,7 @@ import javax.validation.constraints.*;
 @ApiModel(description = "It applies for product_type mobile, value_added_service and bolt-on, and provides information on available data, voice and sms quota")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2020-07-27T08:22:02.967Z")
-
+@JsonInclude(Include.NON_NULL)
 public class Quotas   {
   @JsonProperty("data")
   @Valid
