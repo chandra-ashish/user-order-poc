@@ -28,7 +28,7 @@ spec:
       
       containers:
       - name: telpoc-demo-container
-        image: babaidevops/ci_demo_test:20
+        image: babaidevops/ci_demo_test:21
         imagePullPolicy: Always 
         
        
