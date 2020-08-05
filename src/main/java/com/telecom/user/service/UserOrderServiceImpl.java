@@ -216,8 +216,9 @@ public class UserOrderServiceImpl implements UserOrderService
 		try {
 			logger.info("x-correlator " + coreelatorId + " # Fetch Order by UserId and PhoneNumber -" + LocalDateTime.now() + " - Fetching order details from database ");
 			ordetDb = orderDao.getOrderByOrderId(orderId);
-	
-		   if(ordetDb.getUserId().equalsIgnoreCase(userId))
+			User userDb = null;
+			 userDb = orderDao.getUserByUserId(userId);
+		   if(ordetDb.getUserId().equalsIgnoreCase(userId) && !userDb.getRole().equalsIgnoreCase("admin"))
 		   {
 			
 			BeanUtils.copyProperties(ordetDb, order);
@@ -225,6 +226,13 @@ public class UserOrderServiceImpl implements UserOrderService
 			order.setStatus(OrderStatus.fromValue(ordetDb.getStatus()));
 			order.setType(Order.TypeEnum.fromValue(ordetDb.getType()));
 		    }
+		   else if(userDb.getRole().equalsIgnoreCase("admin"))
+		   {
+			   BeanUtils.copyProperties(ordetDb, order);
+				order.setCreationDate(getCurrentTimeInStr(ordetDb.getCreationDate()));
+				order.setStatus(OrderStatus.fromValue(ordetDb.getStatus()));
+				order.setType(Order.TypeEnum.fromValue(ordetDb.getType()));
+		   }
 		
 		  logger.info("x-correlator " + coreelatorId + " # Fetch Order by UserId and PhoneNumber -" + LocalDateTime.now() + " -   Order details fetched successfully ");
 		}catch(Exception e) {	
